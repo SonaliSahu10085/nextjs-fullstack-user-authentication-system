@@ -1,7 +1,6 @@
 import User from "@/models/user.model";
 import nodemailer from "nodemailer";
 import otpGenerator from "otp-generator";
-import bcrypt from "bcryptjs";
 
 export const sendEmail = async ({ email, emailType, userId }: any) => {
   try {
