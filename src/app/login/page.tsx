@@ -29,15 +29,14 @@ export default function Login() {
             event.preventDefault();
             const response = await axios.post("/api/users/login", user);
             console.log("user login successfully.", response.data);
-            toast.success("User Login successfully.")
             setUser({
                 email: "",
                 password: "",
             })
-            router.push("/profile");
+            router.push("/verify");
         } catch (err: any) {
             console.log("Login Failed", err);
-            toast.error(err.message);
+            toast.error(err?.response?.data?.error);
             setUser({
                 email: "",
                 password: "",
@@ -48,18 +47,18 @@ export default function Login() {
         }
     }
     return (
-        <div className='flex justify-center items-center min-h-screen px-4'>
+        <div className='flex justify-center items-center min-h-screen px-4 bg-gray-900'>
             <form className='w-full max-w-md md:max-w-lg lg:max-w-xl' onSubmit={handleOnSubmit}>
 
-                <h1 className='text-4xl md:text-5xl md:text-left lg:text-6xl mb-6 text-center'>{loading ? "Loading..." : "Login"}</h1>
+                <h1 className='text-white text-4xl md:text-5xl md:text-left lg:text-6xl mb-6 text-center'>{loading ? "Loading..." : "Login"}</h1>
 
                 <div className="mb-4 flex flex-col">
-                    <label className="mb-2" htmlFor='email'>Email</label>
-                    <input type="text" className="bg-white shadow-amber-400 shadow-inner text-black p-2 rounded" name='email' id='email' value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
+                    <label className="mb-2 text-white" htmlFor='email'>Email</label>
+                    <input type="email" className="bg-white shadow-amber-400 shadow-inner text-black p-2 rounded" name='email' id='email' value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
                 </div>
 
                 <div className="mb-6 flex flex-col">
-                    <label className="mb-2" htmlFor='password'>Password</label>
+                    <label className="mb-2 text-white" htmlFor='password'>Password</label>
                     <input type="text" className="bg-white shadow-amber-400 shadow-inner text-black p-2 rounded" name='password' id='password' value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
                 </div>
 
@@ -74,12 +73,20 @@ export default function Login() {
                     Login
                 </button>
 
-                <p className='mt-4'>Don't have an account?
+                <div className='flex flex-row justify-between'>
+                <p className='mt-4'>
                     <Link href="/signup"
-                        className="underline text-blue-600 hover:text-blue-800">
-                        {" "}Singup
+                        className=" text-blue-600 hover:underline">
+                        Don't have an account?
                     </Link>
                 </p>
+                <p className='mt-4'>
+                    <Link href="/verify"
+                        className=" text-blue-600 hover:underline">
+                        Forgot Password?
+                    </Link>
+                </p>
+               </div>
 
             </form>
         </div>

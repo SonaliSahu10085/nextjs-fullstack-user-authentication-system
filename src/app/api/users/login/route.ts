@@ -3,7 +3,8 @@ import User from "@/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// import { sendEmail } from "@/helpers/mailer";
+import { sendEmail } from "@/helpers/mailer";
+
 
 // Database Connection
 connectDb();
@@ -13,7 +14,7 @@ export async function POST(request: NextRequest) {
         const reqBody = await request.json();
         const { email, password } = reqBody;
 
-        // Check if user already exists
+        // Check if user does not exists
         const user = await User.findOne({ email });
         if (!user) {
             return NextResponse.json(
@@ -32,31 +33,33 @@ export async function POST(request: NextRequest) {
         }
 
         // Send verification email
-        // const verifyUrl = `http://localhost:3000/verify-email?token=${user.verifyToken}`;
-        // await sendEmail(email, verifyUrl);
+        await sendEmail({ email, emailType: "VERIFY", userId: user._id });
         
         // create token data
-        const tokenData = {
-            id: user._id,
-            username: user.username,
-            email: user.email
-        }
+        // const tokenData = {
+        //     id: user._id,
+        //     username: user.username,
+        //     email: user.email
+        // }
 
-        // create token
-        const token = await jwt.sign(tokenData, process.env.JWT_SECRET!, {
-            expiresIn: "1d"
-        });
+        // // create token
+        // const token = await jwt.sign(tokenData, process.env.JWT_SECRET!, {
+        //     expiresIn: "1d"
+        // });
 
-        const response = NextResponse.json({
-            message: "User logged in successfully",
-            success: true
-        },{ status: 200 });
+        // const response = NextResponse.json({
+        //     message: "User logged in successfully.",
+        //     success: true
+        // },{ status: 200 });
        
-        response.cookies.set("token", token, {
-            httpOnly: true
-        });
+        // response.cookies.set("token", token, {
+        //     httpOnly: true
+        // });
 
-        return response;
+        return NextResponse.json({
+            message: "Please Verify yourself.",
+            success: true
+        })
     } catch (err: any) {
         return NextResponse.json({ error: err.message }, { status: 500 });
     }

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    
     // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -31,6 +31,9 @@ export async function POST(request: NextRequest) {
       email,
       password: hashedPassword,
     });
+    
+    // Send verification email
+    // await sendEmail({ email, emailType: "VERIFY", userId: newUser._id });
 
     const savedUser = await newUser.save();
 
